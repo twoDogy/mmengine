@@ -6,7 +6,8 @@ from typing import Iterator, Optional, Sized
 import torch
 from torch.utils.data import Sampler
 
-from mmengine.dist import get_dist_info, sync_random_seed
+# from mmengine.dist import get_dist_info, sync_random_seed
+import numpy as np
 from mmengine.registry import DATA_SAMPLERS
 
 
@@ -45,14 +46,14 @@ class DefaultSampler(Sampler):
                  shuffle: bool = True,
                  seed: Optional[int] = None,
                  round_up: bool = True) -> None:
-        rank, world_size = get_dist_info()
+        rank, world_size = 0, 1 #get_dist_info()
         self.rank = rank
         self.world_size = world_size
 
         self.dataset = dataset
         self.shuffle = shuffle
         if seed is None:
-            seed = sync_random_seed()
+            seed = np.random.randint(2**31) #sync_random_seed()
         self.seed = seed
         self.epoch = 0
         self.round_up = round_up
@@ -122,7 +123,7 @@ class InfiniteSampler(Sampler):
                  dataset: Sized,
                  shuffle: bool = True,
                  seed: Optional[int] = None) -> None:
-        rank, world_size = get_dist_info()
+        rank, world_size = 0, 1 #get_dist_info()
         self.rank = rank
         self.world_size = world_size
 
@@ -131,7 +132,7 @@ class InfiniteSampler(Sampler):
         self.rank = rank
         self.shuffle = shuffle
         if seed is None:
-            seed = sync_random_seed()
+            seed = np.random.randint(2**31)#sync_random_seed()
         self.seed = seed
         self.size = len(dataset)
         self.indices = self._indices_of_rank()
