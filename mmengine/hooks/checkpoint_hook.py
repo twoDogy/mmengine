@@ -7,7 +7,7 @@ from math import inf
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Sequence, Union
 
-from mmengine.dist import is_main_process, master_only
+# from mmengine.dist import is_main_process, master_only
 from mmengine.fileio import FileClient, get_file_backend
 from mmengine.logging import print_log
 from mmengine.registry import HOOKS
@@ -347,7 +347,7 @@ class CheckpointHook(Hook):
             for key, best_ckpt in self.best_ckpt_path_dict.items():
                 self._publish_model(runner, best_ckpt)
 
-    @master_only
+    # @master_only
     def _publish_model(self, runner, ckpt_path: str) -> None:
         """Remove unnecessary keys from ckpt_path and save the new checkpoint.
 
@@ -402,7 +402,7 @@ class CheckpointHook(Hook):
 
         # Model parallel-like training should involve pulling sharded states
         # from all ranks, but skip the following procedure.
-        if not is_main_process():
+        if False: #not is_main_process():
             return
 
         runner.message_hub.update_info(
@@ -479,8 +479,9 @@ class CheckpointHook(Hook):
             runner.message_hub.update_info(best_score_key, best_score)
 
             if best_ckpt_path and \
-               self.file_backend.isfile(best_ckpt_path) and \
-               is_main_process():
+            self.file_backend.isfile(best_ckpt_path):
+            #    self.file_backend.isfile(best_ckpt_path) and \
+            #    is_main_process():
                 self.file_backend.remove(best_ckpt_path)
                 runner.logger.info(
                     f'The previous best checkpoint {best_ckpt_path} '
