@@ -6,7 +6,7 @@ from typing import List, Optional, Tuple
 import numpy as np
 import torch
 
-from mmengine.dist import get_rank, sync_random_seed
+# from mmengine.dist import get_rank, sync_random_seed
 from mmengine.logging import print_log
 from mmengine.utils import digit_version, is_list_of
 from mmengine.utils.dl_utils import TORCH_VERSION
@@ -58,10 +58,11 @@ def set_random_seed(seed: Optional[int] = None,
             have different random seed in different threads. Defaults to False.
     """
     if seed is None:
-        seed = sync_random_seed()
+        import numpy as np
+        seed = np.random.randint(2**31)#sync_random_seed()
 
     if diff_rank_seed:
-        rank = get_rank()
+        rank = 0 #get_rank()
         seed += rank
 
     random.seed(seed)
