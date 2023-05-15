@@ -10,13 +10,13 @@ from uuid import uuid4
 
 import torch
 import torch.nn as nn
-from torch.distributed import destroy_process_group
+# from torch.distributed import destroy_process_group
 from torch.utils.data import Dataset
 
 import mmengine.hooks  # noqa F401
 import mmengine.optim  # noqa F401
 from mmengine.config import Config
-from mmengine.dist import is_distributed
+# from mmengine.dist import is_distributed
 from mmengine.evaluator import BaseMetric
 from mmengine.logging import MessageHub, MMLogger
 from mmengine.model import BaseModel
@@ -162,8 +162,8 @@ class RunnerTestCase(TestCase):
         METRICS.module_dict.pop('ToyMetric', None)
         DATASETS.module_dict.pop('ToyDataset', None)
         self.temp_dir.cleanup()
-        if is_distributed():
-            destroy_process_group()
+        # if is_distributed():
+        #     destroy_process_group()
 
     def build_runner(self, cfg: Config):
         cfg.experiment_name = self.experiment_name
