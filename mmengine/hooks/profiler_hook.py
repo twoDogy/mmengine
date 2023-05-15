@@ -7,7 +7,7 @@ from typing import Callable, Optional, Union
 
 import torch
 
-from mmengine.dist import master_only
+# from mmengine.dist import master_only
 from mmengine.hooks import Hook
 from mmengine.logging import print_log
 from mmengine.registry import HOOKS
@@ -136,7 +136,7 @@ class ProfilerHook(Hook):
 
         self.json_trace_path = json_trace_path
 
-    @master_only
+    # @master_only
     def before_run(self, runner):
         """Initialize the profiler.
 
@@ -212,13 +212,13 @@ class ProfilerHook(Hook):
                 f'but got {self.on_trace_ready}')
         return _on_trace_ready
 
-    @master_only
+    # @master_only
     def after_train_epoch(self, runner):
         """Determine if the content is exported."""
         if self.by_epoch and runner.epoch == self.profile_times - 1:
             self._export_chrome_trace(runner)
 
-    @master_only
+    # @master_only
     def after_train_iter(self, runner, batch_idx, data_batch, outputs):
         """Update the content according to the schedule, and determine if the
         content is exported."""
@@ -305,7 +305,7 @@ class NPUProfilerHook(Hook):
         self.profiler = torch_npu.npu.profile(
             self.result_path, use_e2e_profiler=use_e2e_profiler)
 
-    @master_only
+    # @master_only
     def before_run(self, runner):
 
         if self.end > runner.max_iters:
@@ -313,14 +313,14 @@ class NPUProfilerHook(Hook):
                 'The profiling end iteration should not be greater'
                 'than the max iteration')
 
-    @master_only
+    # @master_only
     def before_train_iter(self, runner, batch_idx, data_batch=None):
 
         if runner.iter == self.begin:
             self.profiler.__enter__()
             runner.logger.info('NPUProfiler starts profiling...')
 
-    @master_only
+    # @master_only
     def after_train_iter(self,
                          runner,
                          batch_idx,
