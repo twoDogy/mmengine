@@ -14,7 +14,7 @@ import torch
 import torch.nn.functional as F
 
 from mmengine.config import Config
-from mmengine.dist import master_only
+# from mmengine.dist import master_only
 from mmengine.logging import print_log
 from mmengine.registry import VISBACKENDS, VISUALIZERS
 from mmengine.structures import BaseDataElement
@@ -213,18 +213,18 @@ class Visualizer(ManagerMixin):
             self.set_image(image)
 
     @property  # type: ignore
-    @master_only
+    # @master_only
     def dataset_meta(self) -> Optional[dict]:
         """Optional[dict]: Meta info of the dataset."""
         return self._dataset_meta
 
     @dataset_meta.setter  # type: ignore
-    @master_only
+    # @master_only
     def dataset_meta(self, dataset_meta: dict) -> None:
         """Set the dataset meta info to the Visualizer."""
         self._dataset_meta = dataset_meta
 
-    @master_only
+    # @master_only
     def show(self,
              drawn_img: Optional[np.ndarray] = None,
              win_name: str = 'image',
@@ -276,7 +276,7 @@ class Visualizer(ManagerMixin):
             raise ValueError('backend should be "matplotlib" or "cv2", '
                              f'but got {backend} instead')
 
-    @master_only
+    # @master_only
     def set_image(self, image: np.ndarray) -> None:
         """Set the image to draw.
 
@@ -302,7 +302,7 @@ class Visualizer(ManagerMixin):
             extent=(0, self.width, self.height, 0),
             interpolation='none')
 
-    @master_only
+    # @master_only
     def get_image(self) -> np.ndarray:
         """Get the drawn image. The format is RGB.
 
@@ -351,7 +351,7 @@ class Visualizer(ManagerMixin):
                 num=1, FigureClass=Figure, **self.fig_show_cfg)
             self.manager.set_window_title(win_name)
 
-    @master_only
+    # @master_only
     def get_backend(self, name) -> 'BaseVisBackend':
         """get vis backend by name.
 
@@ -379,7 +379,7 @@ class Visualizer(ManagerMixin):
                (position[..., 1] >= 0).all()
         return flag
 
-    @master_only
+    # @master_only
     def draw_points(self,
                     positions: Union[np.ndarray, torch.Tensor],
                     colors: Union[str, tuple, List[str], List[tuple]] = 'g',
@@ -414,7 +414,7 @@ class Visualizer(ManagerMixin):
             positions[:, 0], positions[:, 1], c=colors, s=sizes, marker=marker)
         return self
 
-    @master_only
+    # @master_only
     def draw_texts(
         self,
         texts: Union[str, List[str]],
@@ -558,7 +558,7 @@ class Visualizer(ManagerMixin):
                 color=colors[i])
         return self
 
-    @master_only
+    # @master_only
     def draw_lines(
         self,
         x_datas: Union[np.ndarray, torch.Tensor],
@@ -621,7 +621,7 @@ class Visualizer(ManagerMixin):
         self.ax_save.add_collection(line_collect)
         return self
 
-    @master_only
+    # @master_only
     def draw_circles(
         self,
         center: Union[np.ndarray, torch.Tensor],
@@ -705,7 +705,7 @@ class Visualizer(ManagerMixin):
         self.ax_save.add_collection(p)
         return self
 
-    @master_only
+    # @master_only
     def draw_bboxes(
         self,
         bboxes: Union[np.ndarray, torch.Tensor],
@@ -770,7 +770,7 @@ class Visualizer(ManagerMixin):
             line_widths=line_widths,
             face_colors=face_colors)
 
-    @master_only
+    # @master_only
     def draw_polygons(
         self,
         polygons: Union[Union[np.ndarray, torch.Tensor],
@@ -845,7 +845,7 @@ class Visualizer(ManagerMixin):
         self.ax_save.add_collection(polygon_collection)
         return self
 
-    @master_only
+    # @master_only
     def draw_binary_masks(
             self,
             binary_masks: Union[np.ndarray, torch.Tensor],
@@ -911,7 +911,7 @@ class Visualizer(ManagerMixin):
         return self
 
     @staticmethod
-    @master_only
+    # @master_only
     def draw_featmap(featmap: torch.Tensor,
                      overlaid_image: Optional[np.ndarray] = None,
                      channel_reduction: Optional[str] = 'squeeze_mean',
@@ -1057,7 +1057,7 @@ class Visualizer(ManagerMixin):
             plt.close(fig)
             return image
 
-    @master_only
+    # @master_only
     def add_config(self, config: Config, **kwargs):
         """Record the config.
 
@@ -1067,7 +1067,7 @@ class Visualizer(ManagerMixin):
         for vis_backend in self._vis_backends.values():
             vis_backend.add_config(config, **kwargs)
 
-    @master_only
+    # @master_only
     def add_graph(self, model: torch.nn.Module, data_batch: Sequence[dict],
                   **kwargs) -> None:
         """Record the model graph.
@@ -1079,7 +1079,7 @@ class Visualizer(ManagerMixin):
         for vis_backend in self._vis_backends.values():
             vis_backend.add_graph(model, data_batch, **kwargs)
 
-    @master_only
+    # @master_only
     def add_image(self, name: str, image: np.ndarray, step: int = 0) -> None:
         """Record the image.
 
@@ -1092,7 +1092,7 @@ class Visualizer(ManagerMixin):
         for vis_backend in self._vis_backends.values():
             vis_backend.add_image(name, image, step)  # type: ignore
 
-    @master_only
+    # @master_only
     def add_scalar(self,
                    name: str,
                    value: Union[int, float],
@@ -1108,7 +1108,7 @@ class Visualizer(ManagerMixin):
         for vis_backend in self._vis_backends.values():
             vis_backend.add_scalar(name, value, step, **kwargs)  # type: ignore
 
-    @master_only
+    # @master_only
     def add_scalars(self,
                     scalar_dict: dict,
                     step: int = 0,
@@ -1128,7 +1128,7 @@ class Visualizer(ManagerMixin):
         for vis_backend in self._vis_backends.values():
             vis_backend.add_scalars(scalar_dict, step, file_path, **kwargs)
 
-    @master_only
+    # @master_only
     def add_datasample(self,
                        name,
                        image: np.ndarray,
