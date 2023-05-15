@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmengine.dist import all_reduce_params, is_distributed
+# from mmengine.dist import all_reduce_params, is_distributed
 from mmengine.registry import HOOKS
 from .hook import Hook
 
@@ -12,7 +12,7 @@ class SyncBuffersHook(Hook):
     priority = 'NORMAL'
 
     def __init__(self) -> None:
-        self.distributed = is_distributed()
+        # self.distributed = is_distributed()
         # A flag to mark whether synchronization has been done in
         # after_train_epoch
         self.called_in_train = False
@@ -27,10 +27,11 @@ class SyncBuffersHook(Hook):
         Args:
             runner (Runner): The runner of the training process.
         """
-        if self.distributed:
-            if not self.called_in_train:
-                all_reduce_params(runner.model.buffers(), op='mean')
-            self.called_in_train = False
+        # if self.distributed:
+        #     if not self.called_in_train:
+        #         all_reduce_params(runner.model.buffers(), op='mean')
+        #     self.called_in_train = False
+        return
 
     def after_train_epoch(self, runner) -> None:
         """All-reduce model buffers at the end of each epoch.
@@ -38,6 +39,7 @@ class SyncBuffersHook(Hook):
         Args:
             runner (Runner): The runner of the training process.
         """
-        if self.distributed:
-            all_reduce_params(runner.model.buffers(), op='mean')
-            self.called_in_train = True
+        # if self.distributed:
+        #     all_reduce_params(runner.model.buffers(), op='mean')
+        #     self.called_in_train = True
+        return
