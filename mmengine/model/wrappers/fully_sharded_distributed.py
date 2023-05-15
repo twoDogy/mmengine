@@ -105,20 +105,20 @@ class MMFullyShardedDataParallel(FullyShardedDataParallel):
     def __init__(
         self,
         module: nn.Module,
-        process_group: Optional[ProcessGroup] = None,
-        cpu_offload: Optional[Union[bool, CPUOffload]] = None,
+        process_group=None, #: Optional[ProcessGroup] = None,
+        cpu_offload=None, #: Optional[Union[bool, CPUOffload]] = None,
         fsdp_auto_wrap_policy: Optional[Union[str, Callable]] = None,
-        backward_prefetch: Optional[Union[str, BackwardPrefetch]] = None,
+        backward_prefetch=None, #: Optional[Union[str, BackwardPrefetch]] = None,
         **kwargs,
     ):
 
-        if cpu_offload is not None:
-            if isinstance(cpu_offload, bool):
-                cpu_offload = CPUOffload(offload_params=cpu_offload)
-            elif not isinstance(cpu_offload, CPUOffload):
-                raise TypeError(
-                    '`cpu_offload` should be `None`, `bool`'
-                    f'or `CPUOffload`, but has type {type(cpu_offload)}')
+        # if cpu_offload is not None:
+        #     if isinstance(cpu_offload, bool):
+        #         cpu_offload = CPUOffload(offload_params=cpu_offload)
+        #     elif not isinstance(cpu_offload, CPUOffload):
+        #         raise TypeError(
+        #             '`cpu_offload` should be `None`, `bool`'
+        #             f'or `CPUOffload`, but has type {type(cpu_offload)}')
 
         if fsdp_auto_wrap_policy is not None:
             if isinstance(fsdp_auto_wrap_policy, str):
@@ -140,19 +140,19 @@ class MMFullyShardedDataParallel(FullyShardedDataParallel):
                     'or `Callable`, but has type '
                     f'{type(fsdp_auto_wrap_policy)}')
 
-        if backward_prefetch is not None:
-            if isinstance(backward_prefetch, str):
-                assert backward_prefetch in ['pre', 'post'], \
-                    '`backward_prefetch` should be either `pre` or `post`,' \
-                    f' but get {backward_prefetch}'
-                if backward_prefetch == 'pre':
-                    backward_prefetch = BackwardPrefetch.BACKWARD_PRE
-                else:
-                    backward_prefetch = BackwardPrefetch.BACKWARD_POST
-            elif not isinstance(backward_prefetch, BackwardPrefetch):
-                raise TypeError('`backward_prefetch` should be `None`, `str` '
-                                'or `BackwardPrefetch`, but has type '
-                                f'{type(backward_prefetch)}')
+        # if backward_prefetch is not None:
+        #     if isinstance(backward_prefetch, str):
+        #         assert backward_prefetch in ['pre', 'post'], \
+        #             '`backward_prefetch` should be either `pre` or `post`,' \
+        #             f' but get {backward_prefetch}'
+        #         if backward_prefetch == 'pre':
+        #             backward_prefetch = BackwardPrefetch.BACKWARD_PRE
+        #         else:
+        #             backward_prefetch = BackwardPrefetch.BACKWARD_POST
+        #     elif not isinstance(backward_prefetch, BackwardPrefetch):
+        #         raise TypeError('`backward_prefetch` should be `None`, `str` '
+        #                         'or `BackwardPrefetch`, but has type '
+        #                         f'{type(backward_prefetch)}')
 
         super().__init__(
             module=module,
