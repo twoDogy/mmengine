@@ -13,7 +13,7 @@ from typing import Callable, Dict, Optional
 import torch
 
 import mmengine
-from mmengine.dist import get_dist_info
+# from mmengine.dist import get_dist_info
 from mmengine.fileio import FileClient, get_file_backend
 from mmengine.fileio import load as load_file
 from mmengine.logging import print_log
@@ -128,7 +128,7 @@ def load_state_dict(module, state_dict, strict=False, logger=None):
         err_msg.append(
             f'missing keys in source state_dict: {", ".join(missing_keys)}\n')
 
-    rank, _ = get_dist_info()
+    rank, _ = 0, 1 #get_dist_info()
     if len(err_msg) > 0 and rank == 0:
         err_msg.insert(
             0, 'The model and loaded state dict do not match exactly\n')
@@ -366,21 +366,21 @@ def load_from_http(filename,
     Returns:
         dict or OrderedDict: The loaded checkpoint.
     """
-    rank, world_size = get_dist_info()
+    rank, world_size = 0, 1 #get_dist_info()
     if rank == 0:
         checkpoint = load_url(
             filename,
             model_dir=model_dir,
             map_location=map_location,
             progress=progress)
-    if world_size > 1:
-        torch.distributed.barrier()
-        if rank > 0:
-            checkpoint = load_url(
-                filename,
-                model_dir=model_dir,
-                map_location=map_location,
-                progress=progress)
+    # if world_size > 1:
+    #     torch.distributed.barrier()
+    #     if rank > 0:
+    #         checkpoint = load_url(
+    #             filename,
+    #             model_dir=model_dir,
+    #             map_location=map_location,
+    #             progress=progress)
     return checkpoint
 
 
