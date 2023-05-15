@@ -5,8 +5,8 @@ from typing import Any, List, Optional, Sequence, Union
 
 from torch import Tensor
 
-from mmengine.dist import (broadcast_object_list, collect_results,
-                           is_main_process)
+#from mmengine.dist import (broadcast_object_list, collect_results,
+#                           is_main_process)
 from mmengine.fileio import dump
 from mmengine.logging import print_log
 from mmengine.registry import METRICS
@@ -118,16 +118,16 @@ class BaseMetric(metaclass=ABCMeta):
                 logger='current',
                 level=logging.WARNING)
 
-        if self.collect_device == 'cpu':
-            results = collect_results(
-                self.results,
-                size,
-                self.collect_device,
-                tmpdir=self.collect_dir)
-        else:
-            collect_results(self.results, size, self.collect_device)
+        # if self.collect_device == 'cpu':
+        #     results = collect_results(
+        #         self.results,
+        #         size,
+        #         self.collect_device,
+        #         tmpdir=self.collect_dir)
+        # else:
+        #     collect_results(self.results, size, self.collect_device)
 
-        if is_main_process():
+        if True: #is_main_process():
             # cast all tensors in results list to cpu
             results = _to_cpu(results)
             _metrics = self.compute_metrics(results)  # type: ignore
@@ -141,7 +141,7 @@ class BaseMetric(metaclass=ABCMeta):
         else:
             metrics = [None]  # type: ignore
 
-        broadcast_object_list(metrics)
+        # broadcast_object_list(metrics)
 
         # reset the results list
         self.results.clear()
