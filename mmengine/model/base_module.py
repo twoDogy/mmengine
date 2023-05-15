@@ -8,7 +8,7 @@ from typing import Iterable, List, Optional, Union
 
 import torch.nn as nn
 
-from mmengine.dist import master_only
+# from mmengine.dist import master_only
 from mmengine.logging import MMLogger, print_log
 from .weight_init import initialize, update_init_info
 from .wrappers.utils import is_model_wrapper
@@ -150,7 +150,7 @@ class BaseModule(nn.Module, metaclass=ABCMeta):
             for sub_module in self.modules():
                 del sub_module._params_init_info
 
-    @master_only
+    # @master_only
     def _dump_init_info(self):
         """Dump the initialization information to a file named
         `initialization.log.json` in workdir."""
