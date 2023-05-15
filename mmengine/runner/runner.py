@@ -21,8 +21,8 @@ import mmengine
 from mmengine.config import Config, ConfigDict
 from mmengine.dataset import worker_init_fn as default_worker_init_fn
 from mmengine.device import get_device
-from mmengine.dist import (broadcast, get_dist_info, get_rank, init_dist,
-                           is_distributed, master_only)
+# from mmengine.dist import (broadcast, get_dist_info, get_rank, init_dist,
+#                            is_distributed, master_only)
 from mmengine.evaluator import Evaluator
 from mmengine.fileio import FileClient, join_path
 from mmengine.hooks import Hook
@@ -647,15 +647,15 @@ class Runner:
         set_multi_processing(**mp_cfg, distributed=self.distributed)
 
         # init distributed env first, since logger depends on the dist info.
-        if self.distributed and not is_distributed():
-            dist_cfg: dict = env_cfg.get('dist_cfg', {})
-            init_dist(self.launcher, **dist_cfg)
+        # if self.distributed and not is_distributed():
+        #     dist_cfg: dict = env_cfg.get('dist_cfg', {})
+            # init_dist(self.launcher, **dist_cfg)
 
-        self._rank, self._world_size = get_dist_info()
+        self._rank, self._world_size = 0,1 #get_dist_info()
 
         timestamp = torch.tensor(time.time(), dtype=torch.float64)
         # broadcast timestamp from 0 process to other processes
-        broadcast(timestamp)
+        # broadcast(timestamp)
         self._timestamp = time.strftime('%Y%m%d_%H%M%S',
                                         time.localtime(timestamp.item()))
 
@@ -898,8 +898,8 @@ class Runner:
         if hasattr(model, 'init_weights'):
             model.init_weights()
             # sync params and buffers
-            for name, params in model.state_dict().items():
-                broadcast(params)
+            # for name, params in model.state_dict().items():
+            #     broadcast(params)
 
     def scale_lr(self,
                  optim_wrapper: OptimWrapper,
@@ -1398,7 +1398,7 @@ class Runner:
                 init_fn = partial(
                     default_worker_init_fn,
                     num_workers=dataloader_cfg.get('num_workers'),
-                    rank=get_rank(),
+                    rank=0,#get_rank(),
                     seed=seed,
                     disable_subprocess_warning=disable_subprocess_warning)
             else:
@@ -2082,7 +2082,7 @@ class Runner:
 
         return checkpoint
 
-    @master_only
+    # @master_only
     def save_checkpoint(
         self,
         out_dir: str,
@@ -2211,7 +2211,7 @@ class Runner:
             file_client_args=file_client_args,
             backend_args=backend_args)
 
-    @master_only
+    # @master_only
     def dump_config(self) -> None:
         """Dump config to `work_dir`."""
         if self.cfg.filename is not None:
