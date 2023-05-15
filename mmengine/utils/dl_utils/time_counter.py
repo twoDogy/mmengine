@@ -4,7 +4,7 @@ from typing import Optional, Union
 
 import torch
 
-from mmengine.dist.utils import master_only
+# from mmengine.dist.utils import master_only
 from mmengine.logging import MMLogger, print_log
 
 
@@ -76,7 +76,7 @@ class TimeCounter:
 
         return instance
 
-    @master_only
+    # @master_only
     def __call__(self, fn):
         if self.tag is None:
             self.tag = fn.__name__
@@ -100,7 +100,7 @@ class TimeCounter:
 
         return wrapper
 
-    @master_only
+    # @master_only
     def __enter__(self):
         assert self.tag is not None, 'In order to clearly distinguish ' \
                                      'printing information in different ' \
@@ -113,7 +113,7 @@ class TimeCounter:
             torch.cuda.synchronize()
         self.__start_time = time.perf_counter()
 
-    @master_only
+    # @master_only
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.with_sync and torch.cuda.is_available():
             torch.cuda.synchronize()
