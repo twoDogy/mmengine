@@ -1,17 +1,18 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 
 import torch
-from torch.distributed.rpc import is_available
+# from torch.distributed.rpc import is_available
 
-from mmengine.dist import is_main_process
+# from mmengine.dist import is_main_process
 from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
-try:
-    from torch.distributed.optim import \
-        ZeroRedundancyOptimizer as _ZeroRedundancyOptimizer
-except ImportError:
-    _ZeroRedundancyOptimizer = object
+# try:
+#     from torch.distributed.optim import \
+#         ZeroRedundancyOptimizer as _ZeroRedundancyOptimizer
+# except ImportError:
+#     _ZeroRedundancyOptimizer = object
+_ZeroRedundancyOptimizer = object
 
 from .builder import OPTIMIZERS
 
@@ -56,7 +57,7 @@ class ZeroRedundancyOptimizer(_ZeroRedundancyOptimizer):
         assert digit_version(TORCH_VERSION) >= digit_version('1.8.0'), (
             '`torch.distributed.optim.ZeroReundancyOptimizer` is only '
             'available when pytorch version >= 1.8.')
-        assert is_available(), 'torch.distributed.rpc is not available.'
+        # assert is_available(), 'torch.distributed.rpc is not available.'
         # Avoid the generator becoming empty after the following check
         params = list(params)
         assert (
@@ -75,5 +76,6 @@ class ZeroRedundancyOptimizer(_ZeroRedundancyOptimizer):
     def state_dict(self):
         """Consolidate `state_dict`s from ranks to save the `state_dict`."""
         self.consolidate_state_dict()
-        state_dict = super().state_dict() if is_main_process() else dict()
+        # state_dict = super().state_dict() if is_main_process() else dict()
+        state_dict = super().state_dict()
         return state_dict
